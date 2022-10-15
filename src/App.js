@@ -5,7 +5,13 @@ function App() {
   const [texterror, setTexterror] = useState(
     "Поле ввода не должно быть пустым"
   );
-  const [todos, setTodos] = useState([
+  const [todos] = useState([
+    {
+      text: "JavaScript",
+    },
+    {
+      text: "JavaScript",
+    },
     {
       text: "JavaScript",
     },
@@ -15,7 +21,21 @@ function App() {
     {
       text: "PHP",
     },
+    {
+      text: "PHP",
+    },
+    {
+      text: "MySQL",
+    },
+    {
+      text: "MySQL",
+    },
+    {
+      text: "MongoDB",
+    },
   ]);
+  const [copytodos, setCopytodos] = useState(todos);
+
   const handleChange = (e) => {
     setText(e.target.value);
     if (e.target.value === "") {
@@ -23,7 +43,7 @@ function App() {
       setIsempty(true);
     }
     setTexterror("");
-    e.target.nextSibling.className="btn";
+    e.target.nextSibling.className = "btn";
     e.target.className = "input";
     setIsempty(false);
   };
@@ -37,27 +57,26 @@ function App() {
   const handleSumbit = (e) => {
     e.preventDefault();
     console.log(text);
-    setTodos([
-      ...todos,
-      {
-        text: text,
-      },
-    ]);
+    const filteredtodo = todos.filter((todo) => {
+      return todo.text.toLowerCase().includes(text.toLowerCase());
+    });
+    setCopytodos(filteredtodo);
+
     setText("");
     if (e.target.value === "") {
       setTexterror("Поле ввода не должно быть пустым");
       setIsempty(true);
     }
   };
-const deletetodo =(indextodo)=>{
- let filtered = todos.filter((todo, index)=>{
-  if(indextodo===index){
-    return false;
-  }
-  return true;
- })
- setTodos(filtered);
-}
+  const deletetodo = (indextodo) => {
+    let filtered = copytodos.filter((todo, index) => {
+      if (indextodo === index) {
+        return false;
+      }
+      return true;
+    });
+    setCopytodos(filtered);
+  };
 
   return (
     <div className="App">
@@ -69,12 +88,19 @@ const deletetodo =(indextodo)=>{
           onBlur={(e) => handleBlur(e)}
           onChange={(e) => handleChange(e)}
         />
-        <button  disabled={isempty} className={isempty ? "disabled" : "btn"}>Отправить</button>
+        <button disabled={isempty} className={isempty ? "disabled" : "btn"}>
+          Отправить
+        </button>
         {isempty && <div className="is-error">{texterror}</div>}
       </form>
       <div className="container">
-        {todos.map((todo, index) => {
-          return <div className="text-value"><div >{todo.text}</div><button onClick={()=>deletetodo(index)}>x</button></div>;
+        {copytodos.map((todo, index) => {
+          return (
+            <div className="text-value">
+              <div>{todo.text}</div>
+              <button onClick={() => deletetodo(index)}>x</button>
+            </div>
+          );
         })}
       </div>
     </div>
